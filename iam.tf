@@ -39,11 +39,13 @@ resource "aws_iam_role" "role_for_second_lambda_to_access_s3"{
   name = "role_for_second_lambda_function_to_access_s3"
   assume_role_policy = data.aws_iam_policy_document.policy_for_s3_access_terraform_sonia.json
 }
+
 resource "aws_iam_policy" "policy_for_s3_access_for_second_lambda"{
   name = "s3_bucket_access_for_second_lambda_function_via_terraform"
   description = "to give access of our bucket to second lambda function"
   policy = data.aws_iam_policy_document.policy_for_s3_access_for_second_lambda.json
 }
+
 data "aws_iam_policy_document" "policy_for_s3_access_for_second_lambda"{
   statement{
     effect = "Allow"
@@ -51,8 +53,8 @@ data "aws_iam_policy_document" "policy_for_s3_access_for_second_lambda"{
     resources = ["arn:aws:s3:::this-got-created-via-terraform-sonia-16march2024"]
   }
 }
+
 resource "aws_iam_role_policy_attachment" "attach_s3_access_for_second_lambda_function"{
   role = aws_iam_role.role_for_second_lambda_to_access_s3.name
-  description = "connect second lambda's role to our policy"
-  policy = aws_iam_policy.policy_for_s3_access_for_second_lambda.arn
+  policy_arn = aws_iam_policy.policy_for_s3_access_for_second_lambda.arn
 }
